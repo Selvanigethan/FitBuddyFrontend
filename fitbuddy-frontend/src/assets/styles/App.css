@@ -1,0 +1,40 @@
+.register_btn{
+    background: #167db3;
+    padding: 0px !important;
+    border-radius: 20px;
+    line-height: 10px !important;
+    font-size: 15px;
+  }
+  
+  .register_btn:hover{
+    background: #0a5c87;
+  }
+  
+  .login_btn{
+    background: #167db3;
+    padding: 0px !important;
+    border-radius: 20px;
+    line-height: 10px !important;
+    font-size: 15px;
+  }
+  
+  .login_btn:hover{
+    background: #0a5c87;
+  }
+  
+  .logo_img{
+    background: var(--bg-gradient);
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .logo_img img{
+    width: 100%;
+    border-radius: 40px;
+  }
