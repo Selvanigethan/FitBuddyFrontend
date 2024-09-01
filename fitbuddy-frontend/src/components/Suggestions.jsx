@@ -21,15 +21,16 @@ function Suggestions() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(cravings, lackOfDiscipline, partying, favoriteFood);
-    console.log(authToken);
+    const total = parseInt(cravings) + parseInt(lackOfDiscipline) + parseInt(partying) + parseInt(favoriteFood);
 
-    // Validation
-    if (!cravings || !lackOfDiscipline || !partying || !favoriteFood) {
-      handleToast('Error', 'Please fill in all required fields', 'danger');
-      // handleToast('BMR value~TEEE value', '1400.0~2170.0', 'success'); // testing purpose
+    // Validate the sum of all inputs
+    if (total !== 10) {
+      handleToast('Error', 'The days count should equal to 10.', 'danger');
       return;
     }
+
+    console.log(cravings, lackOfDiscipline, partying, favoriteFood);
+    console.log(authToken);
 
     // Start loading spinner
     setLoading(true);
@@ -37,20 +38,19 @@ function Suggestions() {
     // Simulate a delay to see the spinner
     setTimeout(async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.post(
           'http://localhost:8080/api/user/diet-cheat-suggestions',
           {
             "cheatReasonsAndCount": {
-              "cravings": 10,
-              "lackOfDiscipline": 0,
-              "partying": 0,
-              "favoriteFood": 0
+              "cravings": parseInt(cravings),
+              "lackOfDiscipline": parseInt(lackOfDiscipline),
+              "partying": parseInt(partying),
+              "favoriteFood": parseInt(favoriteFood)
             }
           },
           {
             headers: {
-              Authorization: `Bearer ${authToken}`,
-              'Content-Type': 'application/json'
+              Authorization: `Bearer ${authToken}`
             }
           }
         );
@@ -63,7 +63,7 @@ function Suggestions() {
 
       } catch (error) {
         setLoading(false);
-        handleToast('Error', 'There was an error generating suggestions', 'error');
+        handleToast('Error', 'There was an error generating suggestions', 'danger');
       }
     }, 500); // Simulating a delay for loading spinner
   };
@@ -79,148 +79,127 @@ function Suggestions() {
     <div className="container-xxl flex-grow-1 container-p-y">
       <h4 className="fw-bold py-3 mb-4"><span className="text-muted fw-light">Suggestions & Insights/</span> Suggestions</h4>
       <div className="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
-                  <div class="card mb-4">
-                    <div class="card-body">
-                    <form onSubmit={handleSubmit}>
+        <div className="col-md-12">
+          <div className="card mb-4">
+            <div className="card-body">
+              <form onSubmit={handleSubmit}>
+                <h4 className=" d-block">Select the reasons for your last <strong>10</strong> Cheat Meal Days.</h4>
+                <div class="form-text"> (You can add the number of days in below reasons.)</div>
+                <div className="input-group mb-3" style={{ maxWidth: '500px' }}>
+                  <span className="input-group-text" style={{ width: '420px', color: 'white', backgroundColor: '#5c94b1' }}>
+                    Cravings &nbsp;&nbsp;&nbsp; <i className="bx bx-cookie"></i>
+                  </span>
+                  <input
+                    type="number"
+                    className="form-control"
+                    value={cravings}
+                    onChange={(e) => setCravings(e.target.value)}
+                    style={{ maxWidth: '80px' }} 
+                    min="0"
+                    max="10"
+                  />
+                </div>
 
-                      <h5 class="fw-semibold d-block">Select the reasons for your last 10 cheat meal days.</h5>
-                      {/* <span>(The total count of days should equal to 10)</span> */}
-                      {/* <br/><br/><br/> */}
+                <div className="input-group mb-3" style={{ maxWidth: '500px' }}>
+                  <span className="input-group-text" style={{ width: '420px', color: 'white', backgroundColor: '#8b8e8f' }}>
+                    Lack Of Discipline &nbsp;&nbsp;&nbsp; <i className="bx bx-brain"></i>
+                  </span>
+                  <input
+                    type="number"
+                    className="form-control"
+                    value={lackOfDiscipline}
+                    onChange={(e) => setLackOfDiscipline(e.target.value)}
+                    style={{ maxWidth: '80px' }} 
+                    min="0"
+                    max="10"
+                  />
+                </div>
 
-                      <div class="input-group">
-                        <span class="input-group-text" style={{ width: '30%', color:'white', backgroundColor: '#167db3'}}>Cravings</span>
-                        <input type="number" class="form-control"                       
-                        value={cravings}
-                        onChange={(e) => setCravings(e.target.value)}/>
-                      </div>
-                      <br/>
-                      <div class="input-group">
-                        <span class="input-group-text" style={{ width: '30%', color:'white', backgroundColor: '#167db3'}}>Lack Of Discipline</span>
-                        <input type="number" class="form-control"
-                        value={lackOfDiscipline}
-                        onChange={(e) => setLackOfDiscipline(e.target.value)}/>
-                      </div>
-                      <br/>
-                      <div class="input-group">
-                        <span class="input-group-text" style={{ width: '30%', color:'white', backgroundColor: '#167db3'}}>Partying</span>
-                        <input type="number" class="form-control"
-                        value={partying}
-                        onChange={(e) => setPartying(e.target.value)}/>
-                      </div>
-                      <br/>
-                      <div class="input-group">
-                        <span class="input-group-text" style={{ width: '30%', color:'white', backgroundColor: '#167db3'}}>Favorite Food</span>
-                        <input type="number" class="form-control"
-                         value={favoriteFood}
-                         onChange={(e) => setFavoriteFood(e.target.value)}/>
-                      </div>
+                <div className="input-group mb-3" style={{ maxWidth: '500px' }}>
+                  <span className="input-group-text" style={{ width: '420px', color: 'white', backgroundColor: '#5c94b1' }}>
+                    Partying &nbsp;&nbsp;&nbsp; <i className="bx bx-drink"></i>
+                  </span>
+                  <input
+                    type="number"
+                    className="form-control"
+                    value={partying}
+                    onChange={(e) => setPartying(e.target.value)}
+                    style={{ maxWidth: '80px' }} 
+                    min="0"
+                    max="10"
+                  />
+                </div>
 
-                      <div className="row justify-content-end">
-                    
-                    <button type="submit" className="btn btn-primary" disabled={loading} style={{ marginTop: '50px' }}>
-                      Generate Suggestions
-                    </button>
-                    </div>
-                    </form>
-                    
-                    </div>
-                  </div>
-        </div>
-        <div class="col-md-3"></div>
-      </div>
+                <div className="input-group mb-3" style={{ maxWidth: '500px' }}>
+                  <span className="input-group-text" style={{ width: '420px', color: 'white', backgroundColor: '#8b8e8f' }}>
+                    Favorite Food &nbsp;&nbsp;&nbsp; <i className="bx bx-restaurant"></i>
+                  </span>
+                  <input
+                    type="number"
+                    className="form-control"
+                    value={favoriteFood}
+                    onChange={(e) => setFavoriteFood(e.target.value)}
+                    style={{ maxWidth: '80px' }} 
+                    min="0"
+                    max="10"
+                  />
+                </div>
 
-      <div className="row">
-        <div class="col-md-12">
-                  <div class="card mb-4">
-                    <div class="card-body">
-                    {suggestData ? (
-                        suggestData.suggested_actions.map((action, index) => (
-                          <li key={index}>{action}</li>
-                        ))
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    </div>
-                    </div>
-                    </div>
-
-{/* Full-page spinner */}
-{loading && (
-  <div className="spinner-overlay">
-    <div className="spinner-container">
-      <img src={logo} alt="App Logo" className="app-logo" />
-      <div className="spinner-border spinner-border-lg text-primary" role="status"></div>
-    </div>
-  </div>
-)}
-
-      
-{/* Toast Notifications */}
-{toast.show && (
-  <>
-    {/* Error Toast (Top Right) */}
-    {toast.type === 'danger' && (
-      <div 
-        className="bs-toast toast fade show bg-danger" 
-        style={{ 
-          position: 'fixed', 
-          top: '20px', 
-          right: '20px', 
-          zIndex: '1050' 
-        }} 
-        role="alert" 
-        aria-live="assertive" 
-        aria-atomic="true"
-      >
-        <div className="toast-header">
-          <i className="bx bx-bell me-2"></i>
-          <div className="me-auto fw-semibold"> {toast.title}</div>
-          <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close" onClick={() => setToast({ show: false, message: '', type: '' })}></button>
-        </div>
-        <div className="toast-body">
-          {toast.message}
-        </div>
-      </div>
-    )}
-    
-    {/* Success Toast (Center Middle) */}
-    {toast.type === 'success' && (
-
-<div className="row">
-        <div className="row mb-3">
-        <div 
-        className="bs-toast toast fade show" 
-        style={{ 
-          height: '260px',
-          width: '60%',
-          paddingTop: '5px',
-          marginLeft:'230px',
-          backgroundColor: '#167db3',
-          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1);'
-        }} 
-      >
-        <div className="toast-header" style={{textAlign: 'center', display: 'block' }}>
-          <div className="me-auto" style={{fontSize: '28px', color: 'rgb(232 243 251)'}}>
-            {toast.title.split('~')[0]} <br/>
-            <span style={{ fontSize: '24px'}}> {toast.message.split('~')[0]} kcal</span> <br/><hr/>
-
-            {toast.title.split('~')[1]} <br/>
-            <span style={{ fontSize: '24px'}}> {toast.message.split('~')[1]} kcal</span>
+                <div className="row justify-content-end">
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={loading}
+                    style={{ marginTop: '50px', maxWidth: '200px' }}
+                    >
+                    Generate Suggestions
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close" onClick={() => setToast({ show: false, message: '', type: '' })}></button>
-          
-         </div>
-      </div>
         </div>
-    </div>  
+      </div>
 
-    )}
-  </>
-)}
+      {suggestData && (
+        <div className="row">
+          <div className="col-md-12">
+            <div className="card mb-4">
+              <div className="card-body"><hr/>
+                <ul style={{ listStyleType: 'disc', marginLeft: '20px', fontSize: '18px', color: '#797181;' }}>
+                  {suggestData.suggested_actions.map((action, index) => (
+                    <li key={index}>{action}.</li>
+                  ))}
+                </ul><hr/>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
+      {/* Full-page spinner */}
+      {loading && (
+        <div className="spinner-overlay">
+          <div className="spinner-container">
+            <img src={logo} alt="App Logo" className="app-logo" />
+            <div className="spinner-border spinner-border-lg text-primary" role="status"></div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notifications */}
+      {toast.show && (
+        <div className={`bs-toast toast fade show bg-${toast.type}`} style={{ position: 'fixed', top: '20px', right: '20px', zIndex: '1050' }} role="alert" aria-live="assertive" aria-atomic="true">
+          <div className="toast-header">
+            <i className="bx bx-bell me-2"></i>
+            <div className="me-auto fw-semibold">{toast.title}</div>
+            <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close" onClick={() => setToast({ show: false, message: '', type: '' })}></button>
+          </div>
+          <div className="toast-body">
+            {toast.message}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
